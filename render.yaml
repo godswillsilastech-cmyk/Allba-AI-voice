@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: yarngpt-yoruba-tts
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    # IMPORTANT: pick a plan with enough RAM. This loads a ~360M param
+    # language model + a WavTokenizer decoder + torch itself into a single
+    # process's memory on first request. Check Render's current plan specs
+    # and choose one with comfortable headroom above what that footprint
+    # needs -- the free/starter tier is very likely too small and will
+    # OOM-crash on the first /tts call rather than at deploy time.
+    plan: standard
+    envVars:
+      - key: MAX_TEXT_LENGTH
+        value: "400"

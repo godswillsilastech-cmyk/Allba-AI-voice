@@ -1,0 +1,24 @@
+# --- Web server ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+
+# --- CPU-only PyTorch (no CUDA -- much smaller download, fine since Render has no GPU) ---
+# CHANGED: pinned exact versions instead of leaving torch/torchaudio floating.
+# Unpinned, a rebuild months from now could silently resolve to a newer
+# torch/torchaudio pair than what you tested, breaking things without any
+# code change on your side. Verify this pair installs cleanly with
+# transformers==4.47.1 in a local venv before you rely on it in prod.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1
+torchaudio==2.5.1
+
+# --- YarnGPT's own pinned dependencies (from the upstream repo's requirements.txt) ---
+transformers==4.47.1
+outetts==0.2.3
+uroman
+inflect
+
+# CHANGED: gdown removed. It was only ever needed to pull the WavTokenizer
+# checkpoint from Google Drive at build time; that download now happens via
+# a plain `wget` from Hugging Face in the Dockerfile, so this dependency
+# (and its build-essential compile step for one of its own deps) is gone.
